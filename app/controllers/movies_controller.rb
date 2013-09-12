@@ -7,7 +7,14 @@ class MoviesController < ApplicationController
   end
 
   def index
+    @all_ratings = ['G','PG','PG-13','R']
     @movies = Movie.all
+    if params[:ratings]
+      @selected_ratings = params[:ratings].keys
+      p "AAA"
+      p @selected_ratings
+      @movies = Movie.filter_by_ratings(@selected_ratings)
+    end
     @sort = params[:sort]
     @hilite = nil
     if @sort
