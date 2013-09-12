@@ -11,8 +11,6 @@ class MoviesController < ApplicationController
     @movies = Movie.all
     if params[:ratings]
       @selected_ratings = params[:ratings].keys
-      p "AAA"
-      p @selected_ratings
       @movies = Movie.filter_by_ratings(@selected_ratings)
     end
     @sort = params[:sort]
