@@ -9,11 +9,21 @@ class MoviesController < ApplicationController
   def index
     @all_ratings = ['G','PG','PG-13','R']
     @movies = Movie.all
-    if params[:ratings]
-      @selected_ratings = params[:ratings].keys
-      @movies = Movie.filter_by_ratings(@selected_ratings)
+
+    @ratings = params[:ratings]
+    if !@ratings
+      @ratings = session[:ratings]
     end
+    if @ratings
+      @selected_ratings = @ratings.keys
+      @movies = Movie.filter_by_ratings(@selected_ratings)
+      session[:ratings] = @ratings
+    end
+
     @sort = params[:sort]
+    if !@sort
+      @sort = session[:sort]
+    end
     @hilite = nil
     if @sort
       if @sort == "title"
@@ -21,11 +31,13 @@ class MoviesController < ApplicationController
           a.title <=> b.title
         end
         @hilite = "title"
+        session[:sort] = "title"
       elsif @sort == "release"
         @movies.sort! do |a,b|
           a.release_date <=> b.release_date
         end
         @hilite = "release"
+        session[:sort] = "release"
       end   
     end
   end
